@@ -4,8 +4,8 @@ from tkinter import ttk
 
 
 root    =   tk.Tk()
-type.ttk.Style(root)
-root.tk.call("source",  "forest-dark.tcl")
+style   =   ttk.Style(root)
 root.tk.call("source",  "forest-light.tcl")
+root.tk.call("source",  "forest-dark.tcl")
 style.theme_use("forest-dark")
 root.mainloop()
