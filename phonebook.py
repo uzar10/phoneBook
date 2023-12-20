@@ -41,6 +41,8 @@ separator.grid(row=5,   column=1,   padx=[20,10],   pady=10,    sticky="ew")
 # switching mode button
 modeSwitch  =   ttk.Checkbutton(introFrame,    text="Switch mode", style="Switch", command = switchMode)
 modeSwitch.grid(row=6,  column=1,   padx=5, pady=10 ,   sticky="nsew")
+
+
 # # insert frame
 # insertFrame =   ttk.LabelFrame(frame,   text    =   "insert new contact")
 # insertFrame.grid(row=0,  column=1,  padx=20,    pady=10)
@@ -73,5 +75,10 @@ modeSwitch.grid(row=6,  column=1,   padx=5, pady=10 ,   sticky="nsew")
 # # insert button
 # insertButton    =   ttk.Button(insertFrame, text="Insert")
 # insertButton.grid(row=5,   column=0   ,padx=5,    pady=[0,5],   sticky=  "nsew")
+
+
+# list frame 
+listFrame =   ttk.LabelFrame(frame,   text    =   "All the Contacts")
+listtFrame.grid(row=0,  column=1,  padx=20,    pady=10)
 
 root.mainloop()
