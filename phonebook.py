@@ -10,39 +10,67 @@ def switchMode():
     else:
         style.theme_use("forest-dark")
 
-def showFrame(frame):
-    frame.grid(row=0, column=1, padx=20, pady=10)
-    introFrame.grid_forget()
+# Function to search contacts
+def searchContact():
+    keyword = searchEntry.get().lower()
 
-def switchToListFrame():
-    introFrame.grid_forget()
-    showFrame(listFrame)
+    # Clear existing data in the treeView
+    for item in treeView.get_children():
+        treeView.delete(item)
 
-def switchToInsertFrame():
-    introFrame.grid_forget()
-    showFrame(insertFrame)
+    # Load data from the Excel file
+    path = "contacts.xlsx"
+    workbook = load_workbook(path)
+    sheet = workbook.active
 
-def switchToSearchFrame():
-    introFrame.grid_forget()
-    showFrame(searchFrame)
+    # Iterate through rows and insert matching rows into the treeView
+    for row in sheet.iter_rows(min_row=2, values_only=True):
+        if any(keyword in str(cell).lower() for cell in row):
+            treeView.insert('', tk.END, values=row)
 
-def switchToSortFrame():
-    introFrame.grid_forget()
-    showFrame(sortFrame)
+# Function to sort contacts
+def sortContacts():
+    path = "contacts.xlsx"
+    workbook = load_workbook(path)
+    sheet = workbook.active
 
-def switchToDeleteFrame():
-    introFrame.grid_forget()
-    showFrame(deleteFrame)
+    # Sort the sheet by the 'Full Name' column in ascending order
+    sheet.sort_values('Full Name', inplace=True)
 
-def backToMainMenu():
-    listFrame.grid_forget()
-    insertFrame.grid_forget()
-    searchFrame.grid_forget()
-    sortFrame.grid_forget()
-    deleteFrame.grid_forget()
-    introFrame.grid(row=0, column=0)
+    # Clear existing data in the treeView
+    for item in treeView.get_children():
+        treeView.delete(item)
 
-# loading data into a table in the listFrame
+# Function to delete a contact
+def deleteContact():
+    contact_to_delete = deleteEntry.get().lower()
+
+    # Load data from the Excel file
+    path = "contacts.xlsx"
+    workbook = load_workbook(path)
+    sheet = workbook.active
+
+    # Check if the contact exists
+    contact_found = False
+    for row_idx, row in enumerate(sheet.iter_rows(min_row=2, values_only=True), start=2):
+        if contact_to_delete in str(row[0]).lower():
+            contact_found = True
+            sheet.delete_rows(row_idx)
+            break
+
+    # Save the changes to the Excel file
+    workbook.save(path)
+
+    # Display messages inside deleteFrame based on whether the contact was found or not
+    if contact_found:
+        deleteStatusLabel.config(text=f"Contact '{contact_to_delete}' deleted successfully.")
+    else:
+        deleteStatusLabel.config(text=f"Contact '{contact_to_delete}' not found.")
+
+    # Clear the entry widget
+    deleteEntry.delete(0, "end")
+
+# loading data into a table in the TreeViewFrame
 def loadData():
     path    =   "contacts.xlsx"
     workbook=   opnepyxl.load_workbook(path)
@@ -95,39 +123,50 @@ root.tk.call("source",  "forest-light.tcl")
 root.tk.call("source",  "forest-dark.tcl")
 style.theme_use("forest-dark")
 
-# frame   =   ttk.Frame(root)
-# frame.pack()
-# intro frame
-introFrame  =   ttk.Frame(root)
-introFrame.pack()
-# Buttons
+frame   =   ttk.Frame(root)
+frame.pack()
+
+# list frame 
+listFrame =   ttk.LabelFrame(frame,  text="List the contacts")
+listFrame.grid(row=0,  column=0,  padx=5, pady=[0,5])
+
 # listing button
-listingButton   =   ttk.Button(introFrame,   text="List the Contacts",  command = switchToListFrame)
-listingButton.grid(row=0,   column =1,  padx=5, pady=[0,5], sticky= "nsew")
-# inserting button  
-insertingButton   =   ttk.Button(introFrame,   text="Insert a new Contacts",  command = switchToInsertFrame)
-insertingButton.grid(row=1,   column =1,  padx=5, pady=[0,5], sticky= "nsew")
-# searching Button
-searchingButton   =   ttk.Button(introFrame,   text="Searching a Contacts", command = switchToSearchFrame)
-searchingButton.grid(row=2,   column =1,  padx=5, pady=[0,5], sticky= "nsew")
-# sorting button
-sortingButton   =   ttk.Button(introFrame,   text="Sort the Contacts",command = switchToSortFrame)
-sortingButton.grid(row=3,   column =1,  padx=5, pady=[0,5], sticky= "nsew")
-# deleting button
-deletingButton   =   ttk.Button(introFrame,   text="Delete a Contacts", command = switchToDeleteFrame)
-deletingButton.grid(row=4,   column =1,  padx=5, pady=[0,5], sticky= "nsew")
-#  line 2 separate
-separator   =   ttk.Separator(introFrame)
-separator.grid(row=5,   column=1,   padx=[20,10],   pady=10,    sticky="ew")
+listingButton    =   ttk.Button(listFrame, text="Show the Contacts",  command = loadData)
+listingButton.grid(row=5,   column=0   ,padx=5,    pady=[0,5],   sticky=  "nsew")
 
+# sort frame 
+sortFrame = ttk.LabelFrame(frame, text="Sorting the contacts")
+sortFrame.grid(row=1, column=0, padx=5, pady=[0,5])
+
+sortButton = ttk.Button(sortFrame, text="Sort by Full Name", command=sortContacts)
+sortButton.grid(row=0, column=0, padx=5, pady=[0,5], sticky="nsew")
+
+# # Scrollbar for the sorted contacts treeView
+# sortTreeScroll = ttk.Scrollbar(sortFrame)
+# sortTreeScroll.grid(row=1, column=1, sticky="ns")
+
+# # Columns for the sorted contacts treeView
+# sortCols = ("Full Name", "Address", "Email", "Telephone", "Mobile Number")
+
+# # Create the sorted contacts treeView
+# sortTreeView = ttk.Treeview(sortFrame, show="headings", yscrollcommand=sortTreeScroll.set, column=sortCols, height=10)
+# for col in sortCols:
+#     sortTreeView.heading(col, text=col)
+#     sortTreeView.column(col, width=100)
+
+# sortTreeView.grid(row=1, column=0, sticky="nsew")
+# sortTreeScroll.config(command=sortTreeView.yview)
+
+# customize frame
+customizeFrame =   ttk.LabelFrame(sortFrame,  text="Customize")
+customizeFrame.grid(row=1,  column=0,  padx=5, pady=[0,5])
 # switching mode button
-modeSwitch  =   ttk.Checkbutton(introFrame,    text="Switch mode", style="Switch", command = switchMode)
-modeSwitch.grid(row=6,  column=1,   padx=5, pady=10 ,   sticky="nsew")
-
+modeSwitch  =   ttk.Checkbutton(customizeFrame,    text="Switch mode", style="Switch", command = switchMode)
+modeSwitch.grid(row=0,  column=0,   padx=5, pady=10 ,   sticky="nsew")
 
 # insert frame
-insertFrame =   ttk.LabelFrame(introFrame,   text    =   "insert new contact")
-insertFrame.grid(row=0,  column=1,  padx=20,    pady=10)
+insertFrame =   ttk.LabelFrame(frame,   text    =   "insert new contact")
+insertFrame.grid(row=0,  column=1,  padx=10,    pady=5)
 #full name entry
 nameEntryFrame   =   ttk.LabelFrame(insertFrame, text="Full Name")
 nameEntryFrame.grid(row=0,column=0   ,padx=5,    pady=[0,5],   sticky=  "nsew")
@@ -158,30 +197,79 @@ mobileEntry.grid(row=0,   column=0   ,padx=5,    pady=[0,5],   sticky=  "nsew")
 insertButton    =   ttk.Button(insertFrame, text="Insert",  command = insertContact)
 insertButton.grid(row=5,   column=0   ,padx=5,    pady=[0,5],   sticky=  "nsew")
 
-# back to main menu button
-backButton = ttk.Button(root, text="Back to Main Menu", command=backToMainMenu)
-backButton.pack(padx=5, pady=[0,5], fill="x")
 
-# list frame 
-listFrame =   ttk.LabelFrame(introFrame,  text="List of the contacts")
-listFrame.grid(row=0,  column=1,   pady=10)
+# Search frame
+searchFrame =   ttk.LabelFrame(frame,   text    =   "Search a contact")
+searchFrame.grid(row=0,  column=2,  padx=5,    pady=[0,5])
+# searh entry frame
+searchEntryFrame = ttk.LabelFrame(searchFrame,  text="Enter a name ")
+searchEntryFrame.grid(row=0, column=0, padx=5, pady=[0,5], sticky="nsew")
+searchEntry = ttk.Entry(searchEntryFrame)
+searchEntry.grid(row=0, column=0, padx=5, pady=[0,5], sticky="nsew")
+
+# Button to perform search
+searchButton = ttk.Button(searchFrame, text="Search", command=searchContact)
+searchButton.grid(row=1, column=0, padx=5, pady=[0,5], sticky="nsew")
+
+# Result treeView for displaying search results
+searchResultFrame = ttk.Frame(searchFrame)
+searchResultFrame.grid(row=2, column=0, padx=5, pady=[0,5], sticky="nsew")
+
+# # Scrollbar for the search result treeView
+# searchTreeScroll = ttk.Scrollbar(searchResultFrame)
+# searchTreeScroll.pack(side="right", fill="y")
+
+# # Columns for search result treeView
+# searchCols = ("Full Name", "Address", "Email", "Telephone", "Mobile Number")
+
+# # Create the search result treeView
+# searchTreeView = ttk.Treeview(searchResultFrame, show="headings",
+#                               yscrollcommand=searchTreeScroll.set, column=searchCols, height=10)
+# for col in searchCols:
+#     searchTreeView.heading(col, text=col)
+#     searchTreeView.column(col, width=100)
+
+# searchTreeView.pack()
+# searchTreeScroll.config(command=searchTreeView.yview)
+
+
+# delete frame 
+deleteFrame = ttk.LabelFrame(frame, text="Sorting the contacts")
+deleteFrame.grid(row=1, column=2, padx=10, pady=[0,5])
+
+# Entry frame for deleteFrame
+deleteEntryFrame = ttk.LabelFrame(deleteFrame, text="Enter a contact")
+deleteEntryFrame.grid(row=0, column=0, padx=5, pady=[0,5], sticky="nsew")
+
+# Entry widget for deleting a contact
+deleteEntry = ttk.Entry(deleteEntryFrame)
+deleteEntry.grid(row=0, column=0, padx=5, pady=[0,5], sticky="nsew")
+
+# Button to perform deletion
+deleteButton = ttk.Button(deleteFrame, text="Delete", command=deleteContact)
+deleteButton.grid(row=1, column=0, padx=5, pady=[0,5], sticky="nsew")
+
+# Label to display status messages
+deleteStatusLabel = ttk.Label(deleteFrame, text="")
+deleteStatusLabel.grid(row=2, column=0, padx=5, pady=[0,5], sticky="nsew")
+
+# TreeView frame
+treeViewFrame   =   ttk.LabelFrame(frame,text="Contacts")
+treeViewFrame.grid(row=1,column=1,padx=5, pady=[0,5], sticky="nsew")
 
 # scroll Bar
-treeScroll  =   ttk.Scrollbar(listFrame)
-treeScroll.pack(side="right"   ,   fill    ="y")
+treeScroll  =   ttk.Scrollbar(treeViewFrame)
+treeScroll.grid(row=0, column=1, sticky="ns")
 
 cols    =   ("Full Name",   "Address"   ,   "Email" ,   "Telephone" ,   "Mobile Number")
-treeView    =   ttk.Treeview(listFrame, show="headings" ,
-        yscrollcommand=treeScroll.set,   column= cols,   height =   10)
+treeView    =   ttk.Treeview(treeViewFrame, show="headings" ,
+        yscrollcommand=treeScroll.set,   column= cols,   height =   5)
 treeView.column("Full Name" ,  width=100)
 treeView.column("Address" , width=100)
 treeView.column("Email" ,   width=100)
 treeView.column("Telephone" ,   width=50)
 treeView.column("Mobile Number" ,   width=50)
-treeView.pack()
+treeView.grid(row=0,column=0)
 treeScroll.config(command=treeView.yview)
-
-# Search frame
-
 
 root.mainloop()
