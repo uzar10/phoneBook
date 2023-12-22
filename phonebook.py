@@ -125,18 +125,20 @@ style.theme_use("forest-dark")
 
 frame   =   ttk.Frame(root)
 frame.pack()
+upframe =   ttk.LabelFrame(frame,text="")
+upframe.grid(row=0,column=0)
 
 # list frame 
-listFrame =   ttk.LabelFrame(frame,  text="List the contacts")
-listFrame.grid(row=0,  column=0,  padx=5, pady=[0,5])
+listFrame =   ttk.LabelFrame(upframe,  text="List the contacts")
+listFrame.grid(row=0,  column=0,  padx=5, pady=1)
 
 # listing button
 listingButton    =   ttk.Button(listFrame, text="Show the Contacts",  command = loadData)
 listingButton.grid(row=5,   column=0   ,padx=5,    pady=[0,5],   sticky=  "nsew")
 
 # sort frame 
-sortFrame = ttk.LabelFrame(frame, text="Sorting the contacts")
-sortFrame.grid(row=1, column=0, padx=5, pady=[0,5])
+sortFrame = ttk.LabelFrame(upframe, text="Sorting the contacts")
+sortFrame.grid(row=1, column=0, padx=5, pady=1)
 
 sortButton = ttk.Button(sortFrame, text="Sort by Full Name", command=sortContacts)
 sortButton.grid(row=0, column=0, padx=5, pady=[0,5], sticky="nsew")
@@ -158,15 +160,15 @@ sortButton.grid(row=0, column=0, padx=5, pady=[0,5], sticky="nsew")
 # sortTreeScroll.config(command=sortTreeView.yview)
 
 # customize frame
-customizeFrame =   ttk.LabelFrame(sortFrame,  text="Customize")
-customizeFrame.grid(row=1,  column=0,  padx=5, pady=[0,5])
+customizeFrame =   ttk.LabelFrame(upframe,  text="Customize")
+customizeFrame.grid(row=2,  column=0,  padx=5, pady=1)
 # switching mode button
 modeSwitch  =   ttk.Checkbutton(customizeFrame,    text="Switch mode", style="Switch", command = switchMode)
 modeSwitch.grid(row=0,  column=0,   padx=5, pady=10 ,   sticky="nsew")
 
 # insert frame
-insertFrame =   ttk.LabelFrame(frame,   text    =   "insert new contact")
-insertFrame.grid(row=0,  column=1,  padx=10,    pady=5)
+insertFrame =   ttk.LabelFrame(upframe,   text    =   "insert new contact")
+insertFrame.grid(row=0,  column=1,  padx=5,    pady=1)
 #full name entry
 nameEntryFrame   =   ttk.LabelFrame(insertFrame, text="Full Name")
 nameEntryFrame.grid(row=0,column=0   ,padx=5,    pady=[0,5],   sticky=  "nsew")
@@ -199,8 +201,9 @@ insertButton.grid(row=5,   column=0   ,padx=5,    pady=[0,5],   sticky=  "nsew")
 
 
 # Search frame
-searchFrame =   ttk.LabelFrame(frame,   text    =   "Search a contact")
-searchFrame.grid(row=0,  column=2,  padx=5,    pady=[0,5])
+searchFrame =   ttk.LabelFrame(upframe,   text    =   "Search a contact")
+searchFrame.grid(row=0,  column=2,  padx=5,    pady=1)
+
 # searh entry frame
 searchEntryFrame = ttk.LabelFrame(searchFrame,  text="Enter a name ")
 searchEntryFrame.grid(row=0, column=0, padx=5, pady=[0,5], sticky="nsew")
@@ -234,8 +237,8 @@ searchResultFrame.grid(row=2, column=0, padx=5, pady=[0,5], sticky="nsew")
 
 
 # delete frame 
-deleteFrame = ttk.LabelFrame(frame, text="Sorting the contacts")
-deleteFrame.grid(row=1, column=2, padx=10, pady=[0,5])
+deleteFrame = ttk.LabelFrame(upframe, text="Sorting the contacts")
+deleteFrame.grid(row=1, column=2, padx=5, pady=1)
 
 # Entry frame for deleteFrame
 deleteEntryFrame = ttk.LabelFrame(deleteFrame, text="Enter a contact")
@@ -247,14 +250,14 @@ deleteEntry.grid(row=0, column=0, padx=5, pady=[0,5], sticky="nsew")
 
 # Button to perform deletion
 deleteButton = ttk.Button(deleteFrame, text="Delete", command=deleteContact)
-deleteButton.grid(row=1, column=0, padx=5, pady=[0,5], sticky="nsew")
+deleteButton.grid(row=1, column=0, padx=5, pady=[0,5], sticky="sew")
 
 # Label to display status messages
 deleteStatusLabel = ttk.Label(deleteFrame, text="")
 deleteStatusLabel.grid(row=2, column=0, padx=5, pady=[0,5], sticky="nsew")
 
 # TreeView frame
-treeViewFrame   =   ttk.LabelFrame(frame,text="Contacts")
+treeViewFrame   =   ttk.LabelFrame(upframe,text="Contacts")
 treeViewFrame.grid(row=1,column=1,padx=5, pady=[0,5], sticky="nsew")
 
 # scroll Bar
