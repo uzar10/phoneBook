@@ -1,7 +1,7 @@
 import tkinter as tk 
 from tkinter import ttk 
 import datetime
-from openpyxl import Workbook
+from openpyxl import Workbook , load_workbook  
 
 # function of the switch mode button 
 def switchMode():
@@ -19,7 +19,7 @@ def searchContact():
         treeView.delete(item)
 
     # Load data from the Excel file
-    path = "contacts.xlsx"
+    path = "E:/projects/phoneBook/phoneBook/contacts.xlsx"
     workbook = load_workbook(path)
     sheet = workbook.active
 
@@ -30,7 +30,7 @@ def searchContact():
 
 # Function to sort contacts
 def sortContacts():
-    path = "contacts.xlsx"
+    path = "E:/projects/phoneBook/phoneBook/contacts.xlsx"
     workbook = load_workbook(path)
     sheet = workbook.active
 
@@ -46,7 +46,7 @@ def deleteContact():
     contact_to_delete = deleteEntry.get().lower()
 
     # Load data from the Excel file
-    path = "contacts.xlsx"
+    path = "E:/projects/phoneBook/phoneBook/contacts.xlsx"
     workbook = load_workbook(path)
     sheet = workbook.active
 
@@ -72,8 +72,8 @@ def deleteContact():
 
 # loading data into a table in the TreeViewFrame
 def loadData():
-    path    =   "contacts.xlsx"
-    workbook=   opnepyxl.load_workbook(path)
+    path    =   "E:/projects/phoneBook/phoneBook/contacts.xlsx"
+    workbook=   load_workbook(path)
     sheet   =   workbook.active
 
     listValues  =   list(sheet.values)
@@ -93,8 +93,8 @@ def insertContact():
     mobile  =   mobileEntry.get()
 
     # insert row into excel sheet
-    path    =   "contacts.xlsx" 
-    workbook    =   opnepyxl.load_workbook(path)
+    path    =   "E:/projects/phoneBook/phoneBook/contacts.xlsx" 
+    workbook    =   load_workbook(path)
     sheet   =   workbook.active
     rowValues   =   [fullName,address,email,telephone,mobile]
     sheet.append(rowValues)
@@ -267,11 +267,11 @@ treeScroll.grid(row=0, column=1, sticky="ns")
 cols    =   ("Full Name",   "Address"   ,   "Email" ,   "Telephone" ,   "Mobile Number")
 treeView    =   ttk.Treeview(treeViewFrame, show="headings" ,
         yscrollcommand=treeScroll.set,   column= cols,   height =   5)
-treeView.column("Full Name" ,  width=100)
-treeView.column("Address" , width=100)
-treeView.column("Email" ,   width=100)
-treeView.column("Telephone" ,   width=50)
-treeView.column("Mobile Number" ,   width=50)
+treeView.column("Full Name" ,  width=150)
+treeView.column("Address" , width=150)
+treeView.column("Email" ,   width=150)
+treeView.column("Telephone" ,   width=100)
+treeView.column("Mobile Number" ,   width=100)
 treeView.grid(row=0,column=0)
 treeScroll.config(command=treeView.yview)
 
