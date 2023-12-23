@@ -34,12 +34,19 @@ def sortContacts():
     workbook = load_workbook(path)
     sheet = workbook.active
 
-    # Sort the sheet by the 'Full Name' column in ascending order
-    sheet.sort_values('Full Name', inplace=True)
+    # Get all data from the sheet
+    all_data = list(sheet.iter_rows(min_row=2, values_only=True))
+
+    # Sort the data by the first column (Full Name)
+    sorted_data = sorted(all_data, key=lambda x: str(x[0]) if x[0] else '')
 
     # Clear existing data in the treeView
     for item in treeView.get_children():
         treeView.delete(item)
+
+    # Insert the sorted data into the treeView
+    for row in sorted_data:
+        treeView.insert('', tk.END, values=row)
 
 # Function to delete a contact
 def deleteContact():
@@ -140,24 +147,8 @@ listingButton.grid(row=5,   column=0   ,padx=5,    pady=[0,5],   sticky=  "nsew"
 sortFrame = ttk.LabelFrame(upframe, text="Sorting the contacts")
 sortFrame.grid(row=1, column=0, padx=5, pady=1)
 
-sortButton = ttk.Button(sortFrame, text="Sort by Full Name", command=sortContacts)
+sortButton = ttk.Button(sortFrame, text="Sort by  Name", command=sortContacts)
 sortButton.grid(row=0, column=0, padx=5, pady=[0,5], sticky="nsew")
-
-# # Scrollbar for the sorted contacts treeView
-# sortTreeScroll = ttk.Scrollbar(sortFrame)
-# sortTreeScroll.grid(row=1, column=1, sticky="ns")
-
-# # Columns for the sorted contacts treeView
-# sortCols = ("Full Name", "Address", "Email", "Telephone", "Mobile Number")
-
-# # Create the sorted contacts treeView
-# sortTreeView = ttk.Treeview(sortFrame, show="headings", yscrollcommand=sortTreeScroll.set, column=sortCols, height=10)
-# for col in sortCols:
-#     sortTreeView.heading(col, text=col)
-#     sortTreeView.column(col, width=100)
-
-# sortTreeView.grid(row=1, column=0, sticky="nsew")
-# sortTreeScroll.config(command=sortTreeView.yview)
 
 # customize frame
 customizeFrame =   ttk.LabelFrame(upframe,  text="Customize")
