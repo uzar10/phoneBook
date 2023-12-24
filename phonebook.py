@@ -22,11 +22,19 @@ def searchContact():
     path = "E:/projects/phoneBook/phoneBook/contacts.xlsx"
     workbook = load_workbook(path)
     sheet = workbook.active
-
+    found = None
     # Iterate through rows and insert matching rows into the treeView
     for row in sheet.iter_rows(min_row=2, values_only=True):
         if any(keyword in str(cell).lower() for cell in row):
             treeView.insert('', tk.END, values=row)
+            found   =   keyword
+
+     # Display messages inside searchFrame based on whether the contact was deleted or not
+    if found == keyword:
+        searchStatusLabel.config(text=f"Contact '{found}' found")
+    else:
+        searchStatusLabel.config(text=f"Contact '{found}' not found.")
+
 
 # Function to sort contacts
 def sortContacts():
@@ -205,6 +213,10 @@ searchEntry.grid(row=0, column=0, padx=5, pady=[0,5], sticky="nsew")
 searchButton = ttk.Button(searchFrame, text="Search", command=searchContact)
 searchButton.grid(row=1, column=0, padx=5, pady=[0,5], sticky="nsew")
 
+# Label to display status messages
+searchStatusLabel = ttk.Label(searchFrame, text=" .... ")
+searchStatusLabel.grid(row=3, column=0, padx=5, pady=[0,5], sticky="nsew")
+
 # Result treeView for displaying search results
 searchResultFrame = ttk.Frame(searchFrame)
 searchResultFrame.grid(row=2, column=0, padx=5, pady=[0,5], sticky="nsew")
@@ -226,7 +238,7 @@ deleteButton = ttk.Button(deleteFrame, text="Delete", command=deleteContact)
 deleteButton.grid(row=1, column=0, padx=5, pady=[0,5], sticky="sew")
 
 # Label to display status messages
-deleteStatusLabel = ttk.Label(deleteFrame, text="")
+deleteStatusLabel = ttk.Label(deleteFrame, text="  ....  ")
 deleteStatusLabel.grid(row=2, column=0, padx=5, pady=[0,5], sticky="nsew")
 
 # TreeView frame
