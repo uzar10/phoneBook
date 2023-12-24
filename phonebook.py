@@ -209,24 +209,6 @@ searchButton.grid(row=1, column=0, padx=5, pady=[0,5], sticky="nsew")
 searchResultFrame = ttk.Frame(searchFrame)
 searchResultFrame.grid(row=2, column=0, padx=5, pady=[0,5], sticky="nsew")
 
-# # Scrollbar for the search result treeView
-# searchTreeScroll = ttk.Scrollbar(searchResultFrame)
-# searchTreeScroll.pack(side="right", fill="y")
-
-# # Columns for search result treeView
-# searchCols = ("Full Name", "Address", "Email", "Telephone", "Mobile Number")
-
-# # Create the search result treeView
-# searchTreeView = ttk.Treeview(searchResultFrame, show="headings",
-#                               yscrollcommand=searchTreeScroll.set, column=searchCols, height=10)
-# for col in searchCols:
-#     searchTreeView.heading(col, text=col)
-#     searchTreeView.column(col, width=100)
-
-# searchTreeView.pack()
-# searchTreeScroll.config(command=searchTreeView.yview)
-
-
 # delete frame 
 deleteFrame = ttk.LabelFrame(upframe, text="Sorting the contacts")
 deleteFrame.grid(row=1, column=2, padx=5, pady=1)
